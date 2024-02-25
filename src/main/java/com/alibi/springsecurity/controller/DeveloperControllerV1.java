@@ -1,6 +1,7 @@
 package com.alibi.springsecurity.controller;
 
 import com.alibi.springsecurity.model.Developer;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class DeveloperControllerV1 {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize(value = "hasAuthority('developers:read')")
     public Developer getById(@PathVariable Long id) {
         return DEVELOPERS.stream().filter(developer -> developer.getId().equals(id))
                 .findFirst()
@@ -30,12 +32,14 @@ public class DeveloperControllerV1 {
     }
 
     @PostMapping
+    @PreAuthorize(value = "hasAuthority('developers:write')")
     public Developer create(@RequestBody Developer developer) {
         this.DEVELOPERS.add(developer);
         return developer;
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize(value = "hasAuthority('developers:write')")
     public void deleteById(@PathVariable Long id) {
         this.DEVELOPERS.removeIf(developer -> developer.getId().equals(id));
     }
